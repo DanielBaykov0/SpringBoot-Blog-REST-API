@@ -3,6 +3,7 @@ package baykov.daniel.springbootblogrestapi.services.impl;
 import baykov.daniel.springbootblogrestapi.entity.Post;
 import baykov.daniel.springbootblogrestapi.exceptions.ResourceNotFoundException;
 import baykov.daniel.springbootblogrestapi.payload.PostDto;
+import baykov.daniel.springbootblogrestapi.payload.PostResponse;
 import baykov.daniel.springbootblogrestapi.repositories.PostRepository;
 import baykov.daniel.springbootblogrestapi.services.PostService;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts(int pageNo, int pageSize) {
+    public PostResponse getAllPosts(int pageNo, int pageSize) {
         // create Pageable instance
         org.springframework.data.domain.Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Post> posts = postRepository.findAll(pageable);
@@ -37,7 +38,15 @@ public class PostServiceImpl implements PostService {
         //get content for page object
         List<Post> listOfPosts = posts.getContent();
 
-        return listOfPosts.stream().map(this::mapToDTO).collect(Collectors.toList());
+        List<PostDto> content = listOfPosts.stream().map(this::mapToDTO).collect(Collectors.toList());
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(content);
+        postResponse.setPageNo(posts.getNumber());
+        postResponse.setPageSize(posts.getSize());
+        postResponse.setTotalElements(posts.getTotalElements());
+        postResponse.setTotalPages(posts.getTotalPages());
+        postResponse.setLast(posts.isLast());
+        return postResponse;
     }
 
     @Override
