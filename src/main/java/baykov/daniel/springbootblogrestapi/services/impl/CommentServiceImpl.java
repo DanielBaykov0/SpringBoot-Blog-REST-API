@@ -9,6 +9,9 @@ import baykov.daniel.springbootblogrestapi.repositories.PostRepository;
 import baykov.daniel.springbootblogrestapi.services.CommentService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -33,6 +36,14 @@ public class CommentServiceImpl implements CommentService {
         Comment newComment = commentRepository.save(comment);
 
         return mapToDTO(newComment);
+    }
+
+    @Override
+    public List<CommentDto> getCommentsByPostId(long postId) {
+        // retrieve comments by post id
+        List<Comment> comments = commentRepository.findByPostId(postId);
+        // convert list of comment entities to list of comment dto's
+        return comments.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     private CommentDto mapToDTO(Comment comment) {
