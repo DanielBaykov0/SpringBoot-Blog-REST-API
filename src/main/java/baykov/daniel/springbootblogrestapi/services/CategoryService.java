@@ -2,9 +2,13 @@ package baykov.daniel.springbootblogrestapi.services;
 
 import baykov.daniel.springbootblogrestapi.payload.CategoryDto;
 
+import java.util.List;
+
 public interface CategoryService {
 
     CategoryDto addCategory(CategoryDto categoryDto);
 
     CategoryDto getCategory(Long categoryId);
+
+    List<CategoryDto> getAllCategories();
 }
