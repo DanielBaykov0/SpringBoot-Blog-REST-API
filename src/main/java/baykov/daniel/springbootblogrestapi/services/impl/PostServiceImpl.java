@@ -1,9 +1,11 @@
 package baykov.daniel.springbootblogrestapi.services.impl;
 
+import baykov.daniel.springbootblogrestapi.entity.Category;
 import baykov.daniel.springbootblogrestapi.entity.Post;
 import baykov.daniel.springbootblogrestapi.exceptions.ResourceNotFoundException;
 import baykov.daniel.springbootblogrestapi.payload.PostDto;
 import baykov.daniel.springbootblogrestapi.payload.PostResponse;
+import baykov.daniel.springbootblogrestapi.repositories.CategoryRepository;
 import baykov.daniel.springbootblogrestapi.repositories.PostRepository;
 import baykov.daniel.springbootblogrestapi.services.PostService;
 import org.modelmapper.ModelMapper;
@@ -20,15 +22,20 @@ public class PostServiceImpl implements PostService {
 
     private PostRepository postRepository;
     private ModelMapper mapper;
+    private CategoryRepository categoryRepository;
 
-    public PostServiceImpl(PostRepository postRepository, ModelMapper mapper) {
+    public PostServiceImpl(PostRepository postRepository, ModelMapper mapper, CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
         this.mapper = mapper;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public PostDto createPost(PostDto postDto) {
+        Category category = categoryRepository.findById(postDto.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Category", "id", postDto.getCategoryId()));
+
         Post post = mapToEntity(postDto);
+        post.setCategory(category);
         Post newPost = postRepository.save(post);
         return mapToDTO(newPost);
     }
