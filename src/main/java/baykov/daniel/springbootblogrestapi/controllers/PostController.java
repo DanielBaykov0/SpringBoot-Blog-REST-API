@@ -4,6 +4,7 @@ import baykov.daniel.springbootblogrestapi.payload.PostDto;
 import baykov.daniel.springbootblogrestapi.payload.PostResponse;
 import baykov.daniel.springbootblogrestapi.services.PostService;
 import baykov.daniel.springbootblogrestapi.utils.AppConstants;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ public class PostController {
         this.postService = postService;
     }
 
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     // create blog post
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
@@ -44,6 +48,9 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     // update post by id
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
@@ -52,6 +59,9 @@ public class PostController {
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
     // delete post by id
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
