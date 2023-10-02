@@ -116,6 +116,14 @@ public class PostController {
         return new ResponseEntity<>("Post entity deleted successfully!", HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get Post By Category Id REST API",
+            description = "Get Post By Category Id REST API is used to get a single post by category id from the database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Http Status 200 SUCCESS"
+    )
     // build get posts by category REST API
     @GetMapping("/api/v1/posts/category/{id}")
     public ResponseEntity<List<PostDto>> getPostsByCategory(@PathVariable("id") Long categoryId) {
